@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { data } = post;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const url = new URL(`/${post.id}`, Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.date.toISOString(),
+  dateModified: (data.updated ?? data.date).toISOString(),
+  mainEntityOfPage: url,
+  url,
+  ...(data.cover && { image: new URL(data.cover, Astro.site).href }),
+  author: { '@type': 'Organization', name: SITE.appName, url: SITE.appUrl },
+  publisher: { '@type': 'Organization', name: SITE.appName, url: SITE.appUrl },
+};
+---
+
+<Base
+  title={data.seoTitle ?? `${data.title} | ${SITE.appName}`}
+  description={data.description}
+  image={data.cover}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <article class="post">
+    <a href="/" class="back">← All posts</a>
+    <p class="meta">
+      {data.category && <span class="tag">{data.category}</span>}
+      <time datetime={data.date.toISOString()}>{fmt(data.date)}</time>
+    </p>
+    <h1>{data.title}</h1>
+    {data.summary && <p class="lede">{data.summary}</p>}
+    {data.cover && (
+      <img class="cover" src={data.cover} alt={data.coverAlt ?? ''} width="1200" height="630" />
+    )}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <aside class="cta">
+      <h2>Replace your paper sign-in sheet today</h2>
+      <p>One QR code. Visitors check in and out from their own phone. No app, no hardware.</p>
+      <a href={SITE.appUrl} class="btn">{SITE.ctaText} →</a>
+    </aside>
+  </article>
+</Base>

@@ -1,0 +1,73 @@
+---
+import { SITE } from '../site';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, image, type = 'website', jsonLd } = Astro.props;
+// Clean URL for search engines: /index.html -> /, /my-post.html -> /my-post
+const cleanPath =
+  Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
+const canonical = new URL(cleanPath, Astro.site);
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a href="/" class="brand">
+          <span class="brand-mark" aria-hidden="true">e</span>
+          <span>eVisiform <span class="brand-sub">Blog</span></span>
+        </a>
+        <a href={SITE.appUrl} class="btn btn-small">{SITE.ctaText}</a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <p>© {new Date().getFullYear()} {SITE.appName}. Visitor management with just a QR code.</p>
+        <nav aria-label="Footer">
+          <a href={SITE.appUrl}>{SITE.appName}</a>
+          <a href="/">Blog</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
