@@ -32,7 +32,7 @@ a { color: var(--accent); }
 .site-header { border-bottom: 1px solid var(--line); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 700; font-size: 1.05rem; }
-.brand-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 800; }
+.brand-logo { width: 44px; height: 44px; object-fit: contain; }
 .brand-sub { color: var(--muted); font-weight: 500; }
 
 /* Buttons */
