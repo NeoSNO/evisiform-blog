@@ -1,27 +1,16 @@
+/* Colours match the eVisiform app's dark theme (17_Visiform/src/index.css). */
 :root {
-  --bg: #ffffff;
-  --surface: #f6f8f8;
-  --text: #16201f;
-  --muted: #5b6b69;
-  --line: #e1e7e6;
-  --accent: #0f766e;
+  color-scheme: dark;
+  --bg: #0a0a0b;                        /* app: --color-paper */
+  --surface: #1a1a1d;                   /* app: --color-paper-card */
+  --text: #f4f4f5;                      /* app: --color-ink */
+  --muted: #9a9aa2;                     /* app: --color-ink-muted */
+  --line: rgba(255, 255, 255, 0.1);     /* app: --color-rule */
+  --accent: #e2603d;                    /* app: --color-rust */
   --accent-ink: #ffffff;
-  --accent-soft: #e6f4f2;
+  --accent-soft: rgba(226, 96, 61, 0.1); /* app: bg-rust/10 */
   --radius: 14px;
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1514;
-    --surface: #172120;
-    --text: #e8efee;
-    --muted: #9aaba9;
-    --line: #26332f;
-    --accent: #2dd4bf;
-    --accent-ink: #062320;
-    --accent-soft: #13302c;
-  }
 }
 
 * { box-sizing: border-box; }
